@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AmdadulHaq\AutoSlug;
+namespace AmdadulHaq\UniqueSlug;
 
 use Closure;
 use Illuminate\Support\Str;
@@ -11,9 +11,9 @@ use Illuminate\Support\Str;
  * @method static saving(Closure $param)
  * @method static whereRaw(string $string)
  */
-trait Sluggable
+trait HasSlug
 {
-    protected static function bootSluggable(): void
+    protected static function bootHasSlug(): void
     {
         static::saving(function ($model) {
             if ($model->isDirty($model->getSlugSourceAttribute())) {
