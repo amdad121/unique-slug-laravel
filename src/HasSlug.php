@@ -20,7 +20,7 @@ trait HasSlug
                 $slugSource = $model->getSlugSourceAttribute();
                 $slug = Str::slug($model->$slugSource, $model->getSlugSeparator());
 
-                $slugAttribute = $model->getSlugAttribute();
+                $slugAttribute = $model->getSlugNameAttribute();
                 $count = static::whereRaw("{$slugAttribute} RLIKE '^{$slug}(-[0-9]+)?$'")
                     ->where($slugSource, '!=', $model->$slugSource)
                     ->count();
@@ -35,7 +35,7 @@ trait HasSlug
         return 'name'; // Default attribute to generate slug from
     }
 
-    public function getSlugAttribute(): string
+    public function getSlugNameAttribute(): string
     {
         return 'slug'; // Default attribute to store the slug
     }
