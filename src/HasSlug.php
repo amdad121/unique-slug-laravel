@@ -4,28 +4,25 @@ declare(strict_types=1);
 
 namespace AmdadulHaq\UniqueSlug;
 
-use Closure;
 use Illuminate\Support\Str;
 
-/**
- * @method static saving(Closure $param)
- * @method static whereRaw(string $string)
- */
 trait HasSlug
 {
     protected static function bootHasSlug(): void
     {
+        parent::boot();
+
         static::saving(function ($model) {
             if ($model->isDirty($model->getSlugSourceAttribute())) {
                 $slugSource = $model->getSlugSourceAttribute();
                 $slug = Str::slug($model->$slugSource, $model->getSlugSeparator());
 
                 $slugAttribute = $model->getSlugNameAttribute();
-                $count = static::whereRaw("{$slugAttribute} RLIKE '^{$slug}(-[0-9]+)?$'")
+                $count = static::whereRaw("$slugAttribute RLIKE '^$slug(-[0-9]+)?$'")
                     ->where($slugSource, '!=', $model->$slugSource)
                     ->count();
 
-                $model->$slugAttribute = $count ? "{$slug}-{$count}" : $slug;
+                $model->$slugAttribute = $count ? "$slug-$count" : $slug;
             }
         });
     }
