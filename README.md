@@ -18,16 +18,14 @@ composer require amdad121/unique-slug-laravel
 ## Usage
 
 ```php
-<?php
-
 namespace App\Models;
 
-use AmdadulHaq\AutoSlug\Sluggable;
+use AmdadulHaq\UniqueSlug\HasSlug;
 // ...
 
 class User extends Authenticatable
 {
-    use Sluggable;
+    use HasSlug;
 
     // Optionally you can configure
     public function getSlugSourceAttribute(): string
