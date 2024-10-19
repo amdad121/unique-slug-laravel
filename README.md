@@ -1,9 +1,9 @@
 # Unique slug generator for Laravel
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/amdad121/unique-slug-laravel.svg?style=flat-square)](https://packagist.org/packages/amdad121/unique-slug-laravel)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/amdadulhaq/unique-slug-laravel.svg?style=flat-square)](https://packagist.org/packages/amdadulhaq/unique-slug-laravel)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/amdad121/unique-slug-laravel/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/amdad121/unique-slug-laravel/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/amdad121/unique-slug-laravel/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/amdad121/unique-slug-laravel/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/amdad121/unique-slug-laravel.svg?style=flat-square)](https://packagist.org/packages/amdad121/unique-slug-laravel)
+[![Total Downloads](https://img.shields.io/packagist/dt/amdadulhaq/unique-slug-laravel.svg?style=flat-square)](https://packagist.org/packages/amdadulhaq/unique-slug-laravel)
 
 This is simple unique slug generator package for Laravel. It is easy to use your any Laravel project.
 
@@ -12,7 +12,7 @@ This is simple unique slug generator package for Laravel. It is easy to use your
 You can install the package via composer:
 
 ```bash
-composer require amdad121/unique-slug-laravel
+composer require amdadulhaq/unique-slug-laravel
 ```
 
 ## Usage
