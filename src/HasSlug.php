@@ -22,15 +22,15 @@ trait HasSlug
                     ->pluck($slugAttribute)
                     ->toArray();
 
-                $model->$slugAttribute = $this->generateUniqueSlug($slug, $existingSlugs);
+                $model->$slugAttribute = self::generateUniqueSlug($slug, $existingSlugs);
             }
         });
     }
 
-    protected function generateUniqueSlug(string $baseSlug, array $existingSlugs): string
+    protected static function generateUniqueSlug(string $baseSlug, array $existingSlugs): string
     {
         if (!in_array($baseSlug, $existingSlugs)) {
-            return $baseSlug;
+            return $baseSlug; // Slug is already unique
         }
 
         $count = 1;
