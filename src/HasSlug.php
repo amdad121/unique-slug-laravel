@@ -10,8 +10,6 @@ trait HasSlug
 {
     protected static function bootHasSlug(): void
     {
-        parent::boot();
-
         static::saving(function ($model) {
             if ($model->isDirty($model->getSlugSourceAttribute())) {
                 $slugSource = $model->getSlugSourceAttribute();
