@@ -17,7 +17,7 @@ trait HasSlug
 
                 $slugAttribute = $model->getSlugNameAttribute();
 
-                $existingSlugs = static::where($slugAttribute, 'LIKE', $slug . '%')
+                $existingSlugs = static::where($slugAttribute, 'LIKE', $slug.'%')
                     ->where($model->getKeyName(), '!=', $model->getKey())
                     ->pluck($slugAttribute)
                     ->toArray();
@@ -29,7 +29,7 @@ trait HasSlug
 
     protected static function generateUniqueSlug(string $baseSlug, array $existingSlugs): string
     {
-        if (!in_array($baseSlug, $existingSlugs)) {
+        if (! in_array($baseSlug, $existingSlugs)) {
             return $baseSlug; // Slug is already unique
         }
 
