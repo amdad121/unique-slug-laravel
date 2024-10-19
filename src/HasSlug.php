@@ -16,13 +16,29 @@ trait HasSlug
                 $slug = Str::slug($model->$slugSource, $model->getSlugSeparator());
 
                 $slugAttribute = $model->getSlugNameAttribute();
-                $count = static::whereRaw("$slugAttribute RLIKE '^$slug(-[0-9]+)?$'")
-                    ->where($slugSource, '!=', $model->$slugSource)
-                    ->count();
 
-                $model->$slugAttribute = $count ? "$slug-$count" : $slug;
+                $existingSlugs = static::where($slugAttribute, 'LIKE', $slug . '%')
+                    ->where($model->getKeyName(), '!=', $model->getKey())
+                    ->pluck($slugAttribute)
+                    ->toArray();
+
+                $model->$slugAttribute = $this->generateUniqueSlug($slug, $existingSlugs);
             }
         });
+    }
+
+    protected function generateUniqueSlug(string $baseSlug, array $existingSlugs): string
+    {
+        if (!in_array($baseSlug, $existingSlugs)) {
+            return $baseSlug;
+        }
+
+        $count = 1;
+        while (in_array("{$baseSlug}-{$count}", $existingSlugs)) {
+            $count++;
+        }
+
+        return "{$baseSlug}-{$count}";
     }
 
     public function getSlugSourceAttribute(): string
