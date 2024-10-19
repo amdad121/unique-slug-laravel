@@ -10,14 +10,14 @@ trait HasSlug
 {
     protected static function bootHasSlug(): void
     {
-        static::saving(function ($model) {
+        static::creating(function ($model) {
             if ($model->isDirty($model->getSlugSourceAttribute())) {
                 $slugSource = $model->getSlugSourceAttribute();
                 $slug = Str::slug($model->$slugSource, $model->getSlugSeparator());
 
                 $slugAttribute = $model->getSlugNameAttribute();
 
-                $existingSlugs = static::where($slugAttribute, 'LIKE', $slug . '%')
+                $existingSlugs = static::where($slugAttribute, 'LIKE', $slug.'%')
                     ->where($model->getKeyName(), '!=', $model->getKey())
                     ->pluck($slugAttribute)
                     ->toArray();
@@ -25,11 +25,32 @@ trait HasSlug
                 $model->$slugAttribute = self::generateUniqueSlug($slug, $existingSlugs);
             }
         });
+
+        static::updating(function ($model) {
+            // Check if slug update is enabled in the configuration
+            $shouldUpdateSlug = config('slug.update_on_update', false);
+
+            if ($shouldUpdateSlug && $model->isDirty($model->getSlugSourceAttribute())) {
+                $slugSource = $model->getSlugSourceAttribute();
+                $slug = Str::slug($model->$slugSource, $model->getSlugSeparator());
+
+                $slugAttribute = $model->getSlugNameAttribute();
+
+                // Fetch all similar slugs from the database in a single query
+                $existingSlugs = static::where($slugAttribute, 'LIKE', $slug.'%')
+                    ->where($model->getKeyName(), '!=', $model->getKey())
+                    ->pluck($slugAttribute)
+                    ->toArray();
+
+                // Generate a unique slug using the helper method
+                $model->$slugAttribute = self::generateUniqueSlug($slug, $existingSlugs);
+            }
+        });
     }
 
     protected static function generateUniqueSlug(string $baseSlug, array $existingSlugs): string
     {
-        if (!in_array($baseSlug, $existingSlugs)) {
+        if (! in_array($baseSlug, $existingSlugs)) {
             return $baseSlug; // Slug is already unique
         }
 

@@ -12,6 +12,7 @@ class UniqueSlugServiceProvider extends PackageServiceProvider
     public function configurePackage(Package $package): void
     {
         $package
-            ->name('unique-slug-laravel');
+            ->name('unique-slug-laravel')
+            ->hasConfigFile('slug');
     }
 }
