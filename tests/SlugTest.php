@@ -2,12 +2,15 @@
 
 declare(strict_types=1);
 
-use AmdadulHaq\UniqueSlug\HasSlug;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+namespace AmdadulHaq\UniqueSlug\Tests;
+
+use AmdadulHaq\UniqueSlug\Tests\Support\TestModel;
+use AmdadulHaq\UniqueSlug\Tests\Support\TestModelWithCustomGenerator;
+use AmdadulHaq\UniqueSlug\Tests\Support\TestModelWithCustomSeparator;
+use AmdadulHaq\UniqueSlug\Tests\Support\TestModelWithSkip;
+use AmdadulHaq\UniqueSlug\Tests\Support\TestModelWithSoftDelete;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Str;
 
 beforeEach(function (): void {
     Schema::dropIfExists('test_models');
@@ -137,64 +140,3 @@ it('provides whereSlugLike scope', function (): void {
 
     expect($found->count())->toBe(2);
 });
-
-class TestModel extends Model
-{
-    use HasSlug;
-
-    protected $table = 'test_models';
-
-    protected $guarded = [];
-}
-
-class TestModelWithCustomSeparator extends Model
-{
-    use HasSlug;
-
-    protected $table = 'test_models';
-
-    protected $guarded = [];
-
-    public function getSlugSeparator(): string
-    {
-        return '_';
-    }
-}
-
-class TestModelWithSoftDelete extends Model
-{
-    use HasSlug;
-    use SoftDeletes;
-
-    protected $table = 'test_models';
-
-    protected $guarded = [];
-}
-
-class TestModelWithCustomGenerator extends Model
-{
-    use HasSlug;
-
-    protected $table = 'test_models';
-
-    protected $guarded = [];
-
-    protected function generateCustomSlug(string $source): string
-    {
-        return 'custom-'.Str::slug($source);
-    }
-}
-
-class TestModelWithSkip extends Model
-{
-    use HasSlug;
-
-    protected $table = 'test_models';
-
-    protected $guarded = [];
-
-    public function shouldSkipSlug(): bool
-    {
-        return true;
-    }
-}
