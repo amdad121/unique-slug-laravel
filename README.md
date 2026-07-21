@@ -7,6 +7,11 @@
 
 A powerful and flexible unique slug generator package for Laravel with advanced features.
 
+## Requirements
+
+- PHP 8.2, 8.3, 8.4, or 8.5
+- Laravel 11, 12, or 13
+
 ## Installation
 
 You can install the package via composer:
@@ -127,6 +132,8 @@ config(['slug.case' => 'upper']);
 Article::create(['name' => 'Hello World']);
 // Generates slug: HELLO-WORLD
 ```
+
+> **Note:** `snake` has no visible effect on the default hyphen-separated output. By the time case is applied, the slug has already gone through `Str::slug()`, which lowercases and hyphenates the whole string — leaving no camelCase boundary left for `Str::snake()` to convert to underscores. If you want underscores, use a custom separator instead (see [Custom Source and Slug Fields](#custom-source-and-slug-fields)) rather than `slug.case`.
 
 #### Maximum Length
 

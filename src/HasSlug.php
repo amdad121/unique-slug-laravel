@@ -7,8 +7,8 @@ namespace AmdadulHaq\UniqueSlug;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
+use ReflectionObject;
 
-/** @phpstan-ignore trait.unused */
 trait HasSlug
 {
     protected static function bootHasSlug(): void
@@ -58,15 +58,19 @@ trait HasSlug
             return true;
         }
 
-        return method_exists($this, 'shouldSkipSlug') && $this->shouldSkipSlug();
+        $reflection = new ReflectionObject($this);
+
+        return $reflection->hasMethod('shouldSkipSlug') && (bool) $reflection->getMethod('shouldSkipSlug')->invoke($this);
     }
 
     protected function generateSlugFromSource(string $slugSource): string
     {
         $source = $this->$slugSource;
 
-        if (method_exists($this, 'generateCustomSlug')) {
-            return $this->generateCustomSlug($source);
+        $reflection = new ReflectionObject($this);
+
+        if ($reflection->hasMethod('generateCustomSlug')) {
+            return (string) $reflection->getMethod('generateCustomSlug')->invoke($this, $source);
         }
 
         return Str::slug($source, $this->getSlugSeparator());
@@ -121,6 +125,9 @@ trait HasSlug
         return sprintf('%s%s%d', $slug, $separator, $count);
     }
 
+    /**
+     * @return array<int, string>
+     */
     protected function getExistingSlugs(string $slug): array
     {
         $slugAttribute = $this->getSlugNameAttribute();
@@ -131,22 +138,34 @@ trait HasSlug
         }
 
         if (config('slug.include_soft_deleted', false) && in_array(SoftDeletingScope::class, array_keys($this->getGlobalScopes()))) {
-            $query->withTrashed();
+            $query->withoutGlobalScope(SoftDeletingScope::class);
         }
 
         return $query->pluck($slugAttribute)->toArray();
     }
 
+    /**
+     * @param  Builder<static>  $query
+     * @return Builder<static>
+     */
     protected function scopeWhereSlug(Builder $query, string $slug): Builder
     {
         return $query->where($this->getSlugNameAttribute(), $slug);
     }
 
+    /**
+     * @param  Builder<static>  $query
+     * @return Builder<static>
+     */
     protected function scopeOrWhereSlug(Builder $query, string $slug): Builder
     {
         return $query->orWhere($this->getSlugNameAttribute(), $slug);
     }
 
+    /**
+     * @param  Builder<static>  $query
+     * @return Builder<static>
+     */
     protected function scopeWhereSlugLike(Builder $query, string $slug): Builder
     {
         return $query->where($this->getSlugNameAttribute(), 'LIKE', $slug.'%');

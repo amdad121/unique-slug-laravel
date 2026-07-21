@@ -3,12 +3,10 @@ includes:
     - vendor/nesbot/carbon/extension.neon
 
 parameters:
-    level: 4
+    level: 8
     paths:
         - src
+        - tests/Support
     tmpDir: build/phpstan
     checkOctaneCompatibility: true
     checkModelProperties: false
-    reportUnmatchedIgnoredErrors: false
-    ignoreErrors:
-        - '#trait.unused#'
